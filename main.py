@@ -4,12 +4,12 @@ from random import randint
 
 item = 0
 lives = 3
+score = 0
 
 wn = Screen()
 wn.title("CLEANUP RUSH")
 wn.screensize(5,5)
 wn.addshape("river.gif")
-wn.addshape("first.gif")
 wn.addshape("fish.gif")
 wn.addshape("heart.gif")
 wn.addshape("plasticbag.gif")
@@ -29,10 +29,6 @@ def scenes():
         text = input("Press enter to continue!")
         if text == "":
           wn.bgpic("river.gif")
-
-
-bottle = Turtle()
-
 
 class Life:
   def __init__(self):
@@ -60,7 +56,7 @@ class Fish:
     self.y=230
     self.turtle.goto(self.x,self.y)
     self.turtle.hideturtle()
-    lives -= 1
+    lives = lives - 1
 
   def fish_stuff(self):
     self.y=randint(-1000,100)
@@ -70,7 +66,7 @@ class Fish:
     self.turtle.showturtle()
     while self.x <= 600 and self.y!= 230:
       self.turtle.goto(self.x,self.y)
-      self.x += 7
+      self.x += 5
     self.turtle.hideturtle()
 
 class PlasticBag:
@@ -84,12 +80,13 @@ class PlasticBag:
 
 
   def plasticbag_click(self, x,y):
-    global lives
+    global lives, score
     self.x=0
     self.y=230
     self.turtle.goto(self.x,self.y)
     self.turtle.hideturtle()
     lives += 1
+    score += 5
   
 
   def plasticbag_stuff(self):
@@ -101,7 +98,7 @@ class PlasticBag:
     self.turtle.showturtle()
     while self.x <= 600 and self.y!= 230:
       self.turtle.goto(self.x,self.y)
-      self.x += 7
+      self.x += 5
     lives -= 1
     self.turtle.hideturtle()
 
@@ -115,12 +112,13 @@ class Bottle:
     self.turtle.hideturtle()
 
   def bottle_click(self,x,y):
-    global lives
+    global lives, score
     self.x=0
     self.y=230
     self.turtle.goto(self.x,self.y)
     self.turtle.hideturtle()
     lives += 1
+    score += 2
 
   def bottle_stuff(self):
     global lives
@@ -131,11 +129,11 @@ class Bottle:
     self.turtle.showturtle()
     while self.x <= 600 and self.y!= 230:
       self.turtle.goto(self.x,self.y)
-      self.x += 7
+      self.x += 5
     lives -= 1
     self.turtle.hideturtle()
 
-
+wn.listen()
 
 scenes()
 life1 = Life()
@@ -151,21 +149,34 @@ plasticbag.turtle.onclick(plasticbag.plasticbag_click)
 bottle = Bottle()
 bottle.turtle.onclick(bottle.bottle_click)
 
-while lives != 0:
+game_loop = True
+
+while game_loop:
   if item == 1:
     fish.fish_stuff()
-  if item == 2:
+  elif item == 2:
     plasticbag.plasticbag_stuff()
-  if item == 3:
+  elif item == 3:
     bottle.bottle_stuff()
   if lives == 2:
     life3.turtle.hideturtle()
   elif lives == 1:
     life2.turtle.hideturtle()
-
   item = randint(1,3)
+  print("Your score is " + str(score) + " out of 15.")
+
+  if lives == 0:
+    life1.turtle.hideturtle()
+    print("YOU LOST AND THE ENVIRONMENT HAS DIED!")
+    game_loop = False
+
+  elif score >= 15:
+    print("YOU WON AND SAVED PROFESSOR GREENIE AND HIS FRIENDS!")
+    game_loop = False
 
 if lives == 0:
-  life1.turtle.hideturtle()
-  print ("YOU LOSE")
+  wn.bgpic("lose.gif")
+else:
+  wn.bgpic("win.gif")
 
+wn.exitonclick()
