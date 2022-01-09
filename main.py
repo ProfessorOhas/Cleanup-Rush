@@ -1,105 +1,171 @@
-# Unlock Hacks Project
-# Friday Jan 7, 2021
-
-
-# Import turtle library 
 from turtle import Screen
 from turtle import Turtle
-from turtle import tracer
 from random import randint
 
-scene = 1
+item = 0
+lives = 3
+
 wn = Screen()
-wn.title("Environment Game UnlockHacks")
+wn.title("CLEANUP RUSH")
 wn.screensize(5,5)
 wn.addshape("river.gif")
+wn.addshape("first.gif")
 wn.addshape("fish.gif")
 wn.addshape("heart.gif")
 wn.addshape("plasticbag.gif")
 wn.addshape("bottle.gif")
-wn.bgpic("river.gif")
-wn.update()
+
+def scenes():
+  wn.bgpic("first.gif")
+  text = input("Press enter to play!")
+  if text == "":
+    wn.bgpic("second.gif")
+    text = input("Press enter to continue!")
+    if text == "":
+      wn.bgpic("third.gif")
+      text = input("Press enter to continue!")
+      if text == "":
+        wn.bgpic("four.gif")
+        text = input("Press enter to continue!")
+        if text == "":
+          wn.bgpic("river.gif")
+
+
+bottle = Turtle()
+
+
+class Life:
+  def __init__(self):
+    self.turtle = Turtle()
+    self.turtle.shape("heart.gif")
+    self.turtle.penup()
+    self.turtle.hideturtle()
+  
+  def gotoInitialPosition(self, x, y):
+    self.turtle.goto(x, y)
+    self.turtle.showturtle()
 
 class Fish:
   def __init__(self):
-    self.fish = Turtle()
-    self.fish.speed(0)
-    self.fish.shape("fish.gif")
-    self.fish.penup()
-    self.fish.goto(randint(-600,-500),randint(-150,150))
+    self.turtle = Turtle()
+    self.turtle.shape("fish.gif")
+    self.x = 0
+    self.y = 0
+    self.turtle.penup()
+    self.turtle.hideturtle()
 
-class Plasticbag:
+  def fish_click(self, x,y):
+    global lives
+    self.x=0
+    self.y=230
+    self.turtle.goto(self.x,self.y)
+    self.turtle.hideturtle()
+    lives -= 1
+
+  def fish_stuff(self):
+    self.y=randint(-1000,100)
+    self.x=-600
+    self.turtle.hideturtle()
+    self.turtle.goto(self.x,self.y)
+    self.turtle.showturtle()
+    while self.x <= 600 and self.y!= 230:
+      self.turtle.goto(self.x,self.y)
+      self.x += 7
+    self.turtle.hideturtle()
+
+class PlasticBag:
   def __init__(self):
-    self.plasticbag = Turtle()
-    self.plasticbag.speed(0)
-    self.plasticbag.shape("plasticbag.gif")
-    self.plasticbag.penup()
-    self.plasticbag.goto(randint(-600,-500),randint(-150,150))
+    self.turtle = Turtle()
+    self.turtle.shape("plasticbag.gif")
+    self.x = 0
+    self.y = 0
+    self.turtle.penup()
+    self.turtle.hideturtle()
+
+
+  def plasticbag_click(self, x,y):
+    global lives
+    self.x=0
+    self.y=230
+    self.turtle.goto(self.x,self.y)
+    self.turtle.hideturtle()
+    lives += 1
+  
+
+  def plasticbag_stuff(self):
+    global lives
+    self.y=randint(-150,150)
+    self.x=-600
+    self.turtle.hideturtle()
+    self.turtle.goto(self.x,self.y)
+    self.turtle.showturtle()
+    while self.x <= 600 and self.y!= 230:
+      self.turtle.goto(self.x,self.y)
+      self.x += 7
+    lives -= 1
+    self.turtle.hideturtle()
 
 class Bottle:
   def __init__(self):
-    self.bottle = Turtle()
-    self.bottle.speed(0)
-    self.bottle.shape("bottle.gif")
-    self.bottle.penup()
-    self.bottle.goto(randint(-600,-500),randint(-150,150))
+    self.turtle = Turtle()
+    self.turtle.shape("bottle.gif")
+    self.x = 0
+    self.y = 0
+    self.turtle.penup()
+    self.turtle.hideturtle()
+
+  def bottle_click(self,x,y):
+    global lives
+    self.x=0
+    self.y=230
+    self.turtle.goto(self.x,self.y)
+    self.turtle.hideturtle()
+    lives += 1
+
+  def bottle_stuff(self):
+    global lives
+    self.y=randint(-150,150)
+    self.x=-600
+    self.turtle.hideturtle()
+    self.turtle.goto(self.x,self.y)
+    self.turtle.showturtle()
+    while self.x <= 600 and self.y!= 230:
+      self.turtle.goto(self.x,self.y)
+      self.x += 7
+    lives -= 1
+    self.turtle.hideturtle()
 
 
 
-class Lives:
-  def __init__(self):
-    self.life = Turtle()
-    self.life.speed(0)
-    self.life.hideturtle()
-    self.life.shape("heart.gif")
-    self.life.penup()
+scenes()
+life1 = Life()
+life2 = Life()
+life3 = Life()
+life1.gotoInitialPosition(230,150)
+life2.gotoInitialPosition(250,150)
+life3.gotoInitialPosition(270,150)
+fish = Fish()
+fish.turtle.onclick(fish.fish_click)
+plasticbag = PlasticBag()
+plasticbag.turtle.onclick(plasticbag.plasticbag_click)
+bottle = Bottle()
+bottle.turtle.onclick(bottle.bottle_click)
 
+while lives != 0:
+  if item == 1:
+    fish.fish_stuff()
+  if item == 2:
+    plasticbag.plasticbag_stuff()
+  if item == 3:
+    bottle.bottle_stuff()
+  if lives == 2:
+    life3.turtle.hideturtle()
+  elif lives == 1:
+    life2.turtle.hideturtle()
 
-fishes = [Fish() for i in range(15)]
-plasticbags = [Plasticbag() for i in range(10)]
-bottles = [Bottle() for i in range(6)]
-lives = [Lives() for i in range(3)]
-for i in range(len(lives)):
-  lives[i].life.goto(300 + 25*i, 190)
-  lives[i].life.showturtle()
+  item = randint(1,3)
 
-tracer(0)
+if lives == 0:
+  life1.turtle.hideturtle()
+  print ("YOU LOSE")
 
-while True:
-  wn.update()
-  
-  for i in range(len(fishes)):
-    fishes[i].fish.clear()
-    x = fishes[i].fish.xcor()
-    x += randint(1,9)
-    fishes[i].fish.setx(x)
-
-    if x>600: 
-      x = randint(-1000,-500)
-      y = randint(-150,150)
-      fishes[i].fish.goto(x,y)
-
-  for i in range(len(plasticbags)):
-    plasticbags[i].plasticbag.clear()
-    x = plasticbags[i].plasticbag.xcor()
-    x += randint(1,7)
-    plasticbags[i].plasticbag.setx(x)
-
-    if x>600: 
-      x = randint(-2000,-500)
-      y = randint(-100,100)
-      plasticbags[i].plasticbag.goto(x,y)
-
-  for i in range(len(bottles)):
-    bottles[i].bottle.clear()
-    x = bottles[i].bottle.xcor()
-    x += randint(1,7)
-    bottles[i].bottle.setx(x)
-
-    if x>600: 
-      x = randint(-2000,-500)
-      y = randint(-100,100)
-      bottles[i].bottle.goto(x,y)
-
-
-wn.mainloop()
