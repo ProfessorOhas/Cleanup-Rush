@@ -165,7 +165,7 @@ while game_loop:
   item = randint(1,3)
   print("Your score is " + str(score) + " out of 15.")
 
-  if lives == 0 or score<15:
+  if lives == 0 or score>=15:
     life1.turtle.hideturtle()
     print("YOU LOST AND THE ENVIRONMENT HAS DIED!")
     game_loop = False
